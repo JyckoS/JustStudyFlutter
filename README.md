@@ -1,3 +1,7 @@
-# juststudyflutterapp
+# JustStudy
+A simple pomodoro study timer flutter app.
 
-A new Flutter project.
+## Available on:
+https://justudy.netlify.app
+
+## Screenshots
