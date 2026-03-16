@@ -1,0 +1,29 @@
+name: juststudyflutterapp
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  animate_do: ^4.2.0
+  audioplayers: ^6.6.0
+  flutter:
+    sdk: flutter
+  flutter_animate: ^4.5.2
+  gap: ^3.0.1
+  get: ^4.7.3
+  google_fonts: ^6.3.2
+  http: ^1.6.0
+  shared_preferences: ^2.5.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  assets:
+    - assets/sounds/
+  uses-material-design: true
