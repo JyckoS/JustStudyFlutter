@@ -8,6 +8,7 @@ import 'package:juststudyflutterapp/controllers/auth/login_controller.dart';
 import 'package:juststudyflutterapp/controllers/main/home_controller.dart';
 import 'package:juststudyflutterapp/views/auth/login_screen.dart';
 import 'package:juststudyflutterapp/widgets/main/leaderboard_section.dart';
+import 'package:juststudyflutterapp/widgets/main/study_chart.dart';
 import 'package:juststudyflutterapp/widgets/main/study_mode_toggle.dart';
 import 'package:juststudyflutterapp/widgets/main/timer_circle.dart';
 
@@ -18,7 +19,7 @@ class HomeScreen extends StatelessWidget {
   final LoginController loginController = Get.put(LoginController());
   String convertMinutes(int minutes) {
     int mins = minutes % 60;
-    int hours = (minutes/60).toInt();
+    int hours = (minutes / 60).toInt();
     int days = (hours / 24).toInt();
     String total = "$mins mins";
     if (hours > 0) {
@@ -29,6 +30,7 @@ class HomeScreen extends StatelessWidget {
     }
     return total;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,12 +55,17 @@ class HomeScreen extends StatelessWidget {
                           style: AppTextStyles.bodyMedium,
                         ),
                         Obx(() {
-                          return Text("You got this, ${controller.username.value}!", style: AppTextStyles.bodyMedium);
-                        },),
+                          return Text(
+                            "You got this, ${controller.username.value}!",
+                            style: AppTextStyles.bodyMedium,
+                          );
+                        }),
                         Obx(() {
-                          return Text("So far, you have studied for ${convertMinutes(
-                            (controller.totalStudyMinutes.value))}", style: AppTextStyles.bodyMedium);
-                        },)
+                          return Text(
+                            "So far, you have studied for ${convertMinutes((controller.totalStudyMinutes.value))}",
+                            style: AppTextStyles.bodyMedium,
+                          );
+                        }),
                       ],
                     ),
                     // ── Logout Button ───────────────────────────────────
@@ -88,23 +95,23 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-        
+
             // ── Mode Toggle ───────────────────────────────────────────────
             FadeInDown(
               delay: Duration(milliseconds: 100),
               child: const StudyModeToggle(),
             ),
-        
+
             const Gap(32),
-        
+
             // ── Timer Circle ──────────────────────────────────────────────
             FadeInUp(
               delay: Duration(milliseconds: 200),
               child: const TimerCircle(),
             ),
-        
+
             const Gap(36),
-        
+
             // ── Divider ───────────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -113,17 +120,36 @@ class HomeScreen extends StatelessWidget {
                 thickness: 1,
               ),
             ),
-        
+
             const Gap(8),
-        
+
             // ── Leaderboard ───────────────────────────────────────────────
+            // ── Replace the leaderboard Expanded section in HomeScreen with this ───────
             Expanded(
               child: FadeInUp(
                 delay: Duration(milliseconds: 300),
-                child: const LeaderboardSection(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ── Chart (left) ──────────────────────────────────────────
+                      Expanded(child: const StudyChart()),
+
+                      // ── Divider ───────────────────────────────────────────────
+                      VerticalDivider(
+                        color: AppColors.textSecondary.withOpacity(0.15),
+                        thickness: 1,
+                        width: 1,
+                      ),
+
+                      // ── Leaderboard (right) ───────────────────────────────────
+                      Expanded(child: const LeaderboardSection()),
+                    ],
+                  ),
+                ),
               ),
             ),
-        
             const Gap(8),
           ],
         ),

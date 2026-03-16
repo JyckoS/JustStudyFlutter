@@ -24,6 +24,15 @@ class StudyService {
       }
       throw Exception("Failed to get total minutes");
     }
+    Future< Map<String, dynamic> > getHistory() async {
+      String token = await getToken();
+      final response = await http.get(Uri.parse("$baseUrl/study/history"),
+        headers: {'Content-Type':'application/json', 'Authorization': 'Bearer $token'});
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+      throw Exception("Failed to get history");
+    }
     Future< Map<String, dynamic> > getTopToday() async {
       String token = await getToken();
       final response = await http.get(Uri.parse("$baseUrl/study/top-today"),

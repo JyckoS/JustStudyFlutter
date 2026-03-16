@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:juststudyflutterapp/constants/app_colors.dart';
+import 'package:juststudyflutterapp/controllers/main/home_controller.dart';
 import 'package:juststudyflutterapp/services/auth_service.dart';
 import 'package:juststudyflutterapp/views/main/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,6 +48,8 @@ class LoginController extends GetxController {
         String token = response['token'];
         saveToken(token);
         Get.to(() => HomeScreen());
+        HomeController homeCt = Get.put(HomeController());
+        homeCt.loadUserData();
       } else {
         Get.snackbar("Oops!", message, colorText: AppColors.textColor, backgroundColor: AppColors.errorColor);
       }

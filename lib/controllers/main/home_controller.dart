@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:juststudyflutterapp/models/leaderboard_entry.dart';
@@ -55,9 +56,12 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     _resetTimer();
-    _loadUserData();
+    loadUserData();
     _loadLeaderboard();
+    _loadHistory();
+
     Timer.periodic(const Duration(minutes: 1), (_) => _loadLeaderboard());
+    
   }
 
   @override
@@ -68,7 +72,7 @@ class HomeController extends GetxController {
 
   // ── Data Loading ──────────────────────────────────────────────────────────
 
-  Future<void> _loadUserData() async {
+  Future<void> loadUserData() async {
     try {
       final userData = await _studyService.getUserData();
       final studyData = await _studyService.getTotalStudyMinutes();
@@ -100,7 +104,35 @@ class HomeController extends GetxController {
       Debug.log('Failed to load leaderboard: $e');
     }
   }
-
+// ── Chart History ───────────────────────────────────────────
+ 
+  //* Chart
+  final studyHistory = <Map<String, dynamic>>[].obs;
+ 
+  // Converts raw history into cumulative FlSpots for the line chart
+List<FlSpot> get chartSpots {
+  return studyHistory.asMap().entries.map((entry) {
+    return FlSpot(
+      entry.key.toDouble(),
+      (entry.value['minutes'] as int).toDouble(),
+    );
+  }).toList();
+}
+ 
+  Future<void> _loadHistory() async {
+    try {
+      final data    = await _studyService.getHistory();
+      final results = data['results'] as List;
+      studyHistory.assignAll(
+        results.map((item) => {
+          'minutes': item['minutes'] as int,
+          'created_at': item['created_at'].toString(),
+        }).toList(),
+      );
+    } catch (e) {
+      Debug.log('Failed to load study history: $e');
+    }
+  }
   // ── Timer Controls ────────────────────────────────────────────────────────
 
   void onCircleTap() => isRunning.value ? _pause() : _start();
@@ -173,6 +205,7 @@ class HomeController extends GetxController {
       totalStudyMinutes.value += minutes;
       Debug.log('Added $minutes minutes to database');
       _loadLeaderboard();
+      _loadHistory();
     }
   }
 
